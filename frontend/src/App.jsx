@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Note from "./components/Note";
 
-const App = (props) => {
-  const [notes, setNotes] = useState(props.notes);
+const App = () => {
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/notes").then((response) => {
+      setNotes(response.data);
+    });
+  }, []);
 
   const addNote = (event) => {
     event.preventDefault();
     const noteObject = {
       content: newNote,
-      important: Math.random() < 0.5,
+      important: Math.random() > 0.5,
       id: notes.length + 1,
     };
 
@@ -27,9 +34,11 @@ const App = (props) => {
   return (
     <div>
       <h1>Notes</h1>
-      <button onClick={() => setShowAll(!showAll)}>
-        show {showAll ? "important" : "all"}
-      </button>
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? "important" : "all"}
+        </button>
+      </div>
       <ul>
         {notesToShow.map((note) => (
           <Note key={note.id} note={note} />
