@@ -4,8 +4,6 @@ const app = express();
 
 const Note = require("./models/note");
 
-let notes = [];
-
 app.use(express.static("dist"));
 
 const requestLogger = (request, response, next) => {
@@ -83,7 +81,7 @@ app.get("/api/notes/:id", (request, response, next) => {
 
 app.delete("/api/notes/:id", (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
@@ -106,7 +104,7 @@ app.put("/api/notes/:id", (request, response, next) => {
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
