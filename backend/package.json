@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test node --test",
     "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
     "deploy:full": "node deploy.js",
-    "lint": "eslint .",
-    "test": "node --test"
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "Giorgi Abesadze",
@@ -24,6 +24,7 @@
     "@eslint/js": "^9.3.0",
     "eslint": "^9.3.0",
     "globals": "^15.3.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
   }
 }
