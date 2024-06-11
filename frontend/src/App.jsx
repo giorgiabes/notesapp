@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
-import noteService from "./services/notes";
 import Footer from "./components/Footer";
+import noteService from "./services/notes";
 import loginService from "./services/login";
 
 const App = () => {
-  const [notes, setNotes] = useState(null);
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -15,22 +15,18 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    noteService.getAll().then((initialNotes) => {
-      setNotes(initialNotes);
-    });
-  }, []);
-
-  if (!notes) {
-    return null;
-  }
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       noteService.setToken(user.token);
     }
+  }, []);
+
+  useEffect(() => {
+    noteService.getAll().then((initialNotes) => {
+      setNotes(initialNotes);
+    });
   }, []);
 
   const addNote = (event) => {
@@ -69,8 +65,6 @@ const App = () => {
     setNewNote(event.target.value);
   };
 
-  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
-
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -85,12 +79,14 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setErrorMessage("wrong credentials");
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
     }
   };
+
+  const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -128,11 +124,10 @@ const App = () => {
       <h1>Notes</h1>
       <Notification message={errorMessage} />
 
-      {user === null ? (
-        loginForm()
-      ) : (
+      {!user && loginForm()}
+      {user && (
         <div>
-          <p>{user.name} logged-in</p>
+          <p>{user.name} logged in</p>
           {noteForm()}
         </div>
       )}
@@ -151,7 +146,6 @@ const App = () => {
           />
         ))}
       </ul>
-
       <Footer />
     </div>
   );
