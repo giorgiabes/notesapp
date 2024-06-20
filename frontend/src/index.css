@@ -4,14 +4,14 @@ h1 {
 }
 
 .note {
-  color: gray;
+  color: grey;
   padding-top: 3px;
   font-size: 15px;
 }
 
 .error {
   color: red;
-  background: lightgray;
+  background: lightgrey;
   font-size: 20px;
   border-style: solid;
   border-radius: 5px;
