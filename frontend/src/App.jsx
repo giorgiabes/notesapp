@@ -5,6 +5,8 @@ import Footer from "./components/Footer";
 import noteService from "./services/notes";
 import loginService from "./services/login";
 import LoginForm from "./components/LoginForm";
+import Togglable from "./components/Togglable";
+import NoteForm from "./components/NoteForm";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
@@ -88,11 +90,6 @@ const App = () => {
     }
   };
 
-  const handleLogOut = () => {
-    window.localStorage.removeItem("loggedNoteappUser");
-    setUser(null);
-  };
-
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   const loginForm = () => {
@@ -133,11 +130,14 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          <p>
-            {user.name} logged in
-            <button onClick={handleLogOut}>logout</button>
-          </p>
-          {noteForm()}
+          <p>{user.name} logged in</p>
+          <Togglable buttonLabel="new note">
+            <NoteForm
+              onSubmit={addNote}
+              value={newNote}
+              handleChange={handleNoteChange}
+            />
+          </Togglable>
         </div>
       )}
 
