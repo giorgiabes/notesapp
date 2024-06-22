@@ -79,6 +79,11 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedNoteappUser");
+    setUser(null);
+  };
+
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
 
   const loginForm = () => {
@@ -112,20 +117,8 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          <p>
-            {user.name} logged in{" "}
-            <button
-              onClick={() => {
-                window.localStorage.clear();
-                setUser(null);
-              }}
-            >
-              log out
-            </button>
-          </p>
-          <Togglable buttonLabel="new note">
-            <NoteForm createNote={addNote} />
-          </Togglable>
+          <p>{user.name} logged in</p>
+          {noteForm()}
         </div>
       )}
 
